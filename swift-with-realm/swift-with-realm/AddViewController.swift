@@ -44,17 +44,21 @@ class AddViewController: UIViewController, UITextFieldDelegate {
 
 	func doneAction() { // [6]
 		let realm = RLMRealm.defaultRealm() // [6.1]
-		if self.textField?.text!.utf16Count > 0 { // [6.2]
+		if self.textField?.text!.characters.count > 0 { // [6.2]
 			let newTodoItem = ToDoItem() // [6.3]
 			newTodoItem.name = self.textField!.text!
-			realm.transactionWithBlock(){ // [6.4]
+			do {
+				realm.transactionWithBlock(){ // [6.4]
 				realm.addObject(newTodoItem)
+				}
+			} catch ex {
+
 			}
 		}
 		dismissViewControllerAnimated(true, completion: nil) // [7]
 	}
 
-	func textFieldShouldReturn(textField: UITextField!) -> Bool { // [8]
+	func textFieldShouldReturn(textField: UITextField) -> Bool { // [8]
 		doneAction()
 		textField.resignFirstResponder()
 		return true
